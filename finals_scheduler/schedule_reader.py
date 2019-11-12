@@ -40,9 +40,15 @@ class ScheduleReader():
                             course_conflicts = conflicts[student_course_num]
                             # Add conflicts to the existing course
                             # Should be all courses besides the current one and that are not already in the list
-                            course_conflicts.append([x for i, x in enumerate(student_course_nums)
+                            new_conflicts = [x for i, x in enumerate(student_course_nums)
                                                      if i != student_course_nums.index(student_course_num)
-                                                     and x not in course_conflicts])
+                                                     and x not in course_conflicts]
+                            if len(new_conflicts) > 0:
+                                for i in range(len(new_conflicts)):
+                                    course_conflicts.append(new_conflicts[i])
+                            #course_conflicts.append([x for i, x in enumerate(student_course_nums)
+                                                     #if i != student_course_nums.index(student_course_num)
+                                                     #and x not in course_conflicts])
                             conflicts[student_course_num] = course_conflicts
 
                 students.append(Student(row['Lastname'], row['Firstname'], student_course_nums))
