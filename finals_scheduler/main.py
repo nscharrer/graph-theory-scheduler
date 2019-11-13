@@ -1,5 +1,6 @@
 from schedule_reader import ScheduleReader
 import grapher
+import scheduler
 
 
 def main():
@@ -9,6 +10,8 @@ def main():
     colored_dict = grapher.greedy_coloring(conflicts)
     grapher.graph_courses(colored_dict)
     #grapher.graph_tester1()
+
+    scheduler.write_schedules(colored_dict, filename="test_schedule.csv")
 
 
 main()

@@ -107,31 +107,44 @@ def graph_courses(conflict_dict):
 
 
 def greedy_coloring(conflict_dict):
+    """
+    Uses the Greedy algorithm to color all vertices
+    :param conflict_dict: Dictionary containing each course and the courses that conflict with it
+    :return: Same dictionary as was passed in but each course also maps to a color as well
+    """
+    # Check if the data passed in has anything
     if len(conflict_dict) == 0:
-        # todo raise error
         print("Conflict dict empty")
         return -1
+
     all_keys = list(conflict_dict)
+
+    # Assign the first class the first color in the list
     first_color = color_list.pop()
     conflicts, color = conflict_dict[all_keys[0]]
     color = first_color
     conflict_dict[all_keys[0]] = (conflicts, color)
 
+    # put the color back
     color_list.append(color)
 
+    # Second part of Greedy algorithm
     for i in range(1, len(all_keys)):
         conflicts, color = conflict_dict[all_keys[i]]
         used_colors = []
-        # go through all conflicting courses (edges) to see what colors are used
+
+        # go through all conflicting courses (adjacent vertices) to see what colors are used
         for course in conflicts:
             temp_conflicts, course_color = conflict_dict[course]
             if course_color is not None:
                 used_colors.append(course_color)
                 color_list.remove(course_color)
 
+        # get the next available color and assign it to this vertex
         color = color_list.pop()
         conflict_dict[all_keys[i]] = (conflicts, color)
 
+        # put that color back, and then put back the other used colors
         color_list.append(color)
         for used_color in used_colors:
             color_list.append(used_color)
