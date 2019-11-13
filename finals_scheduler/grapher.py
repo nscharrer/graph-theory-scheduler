@@ -20,46 +20,6 @@ color_list = ['#48D1CC', '#00FFFF', '#8B0000', '#F5F5F5', '#FAEBD7', '#D2B48C', 
               '#9370DB', '#D3D3D3', '#A52A2A', '#F0FFFF', '#FFDAB9', '#DC143C']
 
 
-def graph_courses(conflict_dict):
-    num_courses = len(conflict_dict)
-    graph = nx.empty_graph(num_courses)
-    pos = nx.spring_layout(graph)  # positions for all nodes
-    node_num = 0
-    labels = {}
-    node_colors = []
-    node_num_dict = {}
-    node_list = []
-    edge_list = []
-
-    for course in conflict_dict:
-        node_num_dict[course] = node_num
-        node_num += 1
-
-    for course in conflict_dict:
-        conflicts, color = conflict_dict[course]
-
-        current_node_num = node_num_dict[course]
-        node_list.append(current_node_num)
-        node_colors.append(color)
-        labels[current_node_num] = course
-
-        for conflict in conflicts:
-            edge_list.append((current_node_num, node_num_dict[conflict]))
-
-    nx.draw_networkx_nodes(graph, pos,
-                           nodelist=node_list,
-                           node_color=node_colors,
-                           node_size=500,
-                           alpha=0.8)
-    nx.draw_networkx_edges(graph, pos,
-                           edgelist=edge_list,
-                           width=2, alpha=0.5, edge_color='#000000')
-
-    nx.draw_networkx_labels(graph, pos, labels, font_size=8)
-    plt.axis('off')
-    plt.show()
-
-
 def greedy_coloring(conflict_dict):
     """
     Uses the Greedy algorithm to color all vertices
@@ -104,3 +64,55 @@ def greedy_coloring(conflict_dict):
             color_list.append(used_color)
 
     return conflict_dict
+
+
+def graph_courses(conflict_dict):
+    """
+    Take the colored conflict dictionary and create a plot of all courses and conflicts
+    :param conflict_dict: dictionary with courses as keys and their conflict and color as mappings
+    :return: True if graphing goes correctly
+    """
+    # initialize the graph - spring layout makes all nodes as far apart as possible for visual ease
+    num_courses = len(conflict_dict)
+    graph = nx.empty_graph(num_courses)
+    pos = nx.spring_layout(graph)  # positions for all nodes
+
+    node_num = 0
+    labels = {}
+    node_colors = []
+    node_num_dict = {}
+    node_list = []
+    edge_list = []
+
+    # map each course to a node number
+    for course in conflict_dict:
+        node_num_dict[course] = node_num
+        node_num += 1
+
+    # get each course out of the dictionary along with its color and set a label for it
+    # also add it's edges based on the conflicting courses
+    for course in conflict_dict:
+        conflicts, color = conflict_dict[course]
+
+        current_node_num = node_num_dict[course]
+        node_list.append(current_node_num)
+        node_colors.append(color)
+        labels[current_node_num] = course
+
+        # the current node conflicts with all nodes in its conflict list, so we need to add that to the edges
+        for conflict in conflicts:
+            edge_list.append((current_node_num, node_num_dict[conflict]))
+
+    # draw the nodes, edges, and labels and show the plot
+    nx.draw_networkx_nodes(graph, pos,
+                           nodelist=node_list,
+                           node_color=node_colors,
+                           node_size=500,
+                           alpha=0.8)
+    nx.draw_networkx_edges(graph, pos,
+                           edgelist=edge_list,
+                           width=2, alpha=0.5, edge_color='#000000')
+
+    nx.draw_networkx_labels(graph, pos, labels, font_size=8)
+    plt.axis('off')
+    plt.show()

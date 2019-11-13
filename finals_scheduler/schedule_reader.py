@@ -15,6 +15,12 @@ class ScheduleReader():
         self.schedules_csv = schedules_csv
 
     def read_schedules(self):
+        """
+        Go through each student schedule and compile each course and its conflict as well as the total course
+        list and the student object list
+        :return: tuple containing: list of students, list of all courses, dictionary of courses and conflicts
+        (and empty colors)
+        """
         with open(self.schedules_csv, newline='') as fp:
             reader = csv.DictReader(fp)
             students = []
@@ -29,11 +35,11 @@ class ScheduleReader():
                     if course_num is not None:
                         student_course_nums.append(course_num)
 
-                # todo not sure if using objects for courses anymore
-                #student_courses = []
-
+                # loop through each course that we found
                 for student_course_num in student_course_nums:
+                    # disregard blank courses (not a full schedule)
                     if student_course_num is not None:
+                        # add it to the full course list
                         if student_course_num not in courses:
                             courses.append(student_course_num)
 
@@ -49,16 +55,16 @@ class ScheduleReader():
                             new_conflicts = [x for i, x in enumerate(student_course_nums)
                                                      if i != student_course_nums.index(student_course_num)
                                                      and x not in course_conflicts]
+                            # add the new conflicts we found to the list
                             if len(new_conflicts) > 0:
                                 for i in range(len(new_conflicts)):
                                     course_conflicts.append(new_conflicts[i])
-                            #course_conflicts.append([x for i, x in enumerate(student_course_nums)
-                                                     #if i != student_course_nums.index(student_course_num)
-                                                     #and x not in course_conflicts])
+                            # put it back in the dictionary
                             conflicts[student_course_num] = course_conflicts
-
+                # add a student object to the list
                 students.append(Student(row['Lastname'], row['Firstname'], student_course_nums))
 
+        # set all the course colors (second item in the tuple) to None for now, handled later
         for course in conflicts:
             conflicts[course] = (conflicts[course], None)
 
