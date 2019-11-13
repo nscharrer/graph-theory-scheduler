@@ -53,4 +53,7 @@ class ScheduleReader():
 
                 students.append(Student(row['Lastname'], row['Firstname'], student_course_nums))
 
+        for course in conflicts:
+            conflicts[course] = (conflicts[course], None)
+
         return students, courses, conflicts

@@ -1,12 +1,14 @@
 from schedule_reader import ScheduleReader
-from grapher import graph_courses
+import grapher
 
 
 def main():
-    scheduleReader = ScheduleReader("C:\\Users\\scharrernf\\Documents\\Fall_2019\\MA327\\major_project\\schedules.csv")
+    scheduleReader = ScheduleReader("E:\\Documents\\MSOE\\Fall_2019\\MA327\\major_project\\graph-theory-scheduler\\schedules.csv")
     students, courses, conflicts = scheduleReader.read_schedules()
 
-    graph_courses(conflicts)
+    colored_dict = grapher.greedy_coloring(conflicts)
+    grapher.graph_courses(colored_dict)
+    #grapher.graph_tester1()
 
 
 main()
