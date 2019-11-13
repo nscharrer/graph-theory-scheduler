@@ -1,11 +1,17 @@
 import csv
 from student import Student
-from course import Course
 
 
 class ScheduleReader():
+    """
+    Class to read in schedules of each student from CSV
+    """
 
     def __init__(self, schedules_csv):
+        """
+        Init the class with the csv to be read
+        :param schedules_csv: file with schedules we want to read in
+        """
         self.schedules_csv = schedules_csv
 
     def read_schedules(self):
